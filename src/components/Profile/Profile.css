@@ -1,0 +1,146 @@
+/* body {
+	height: 100%;
+	background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/50598/concrete-wall-background.jpg) center center fixed;
+	background-size: cover;
+} */
+
+.shade {
+	overflow: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.blackboard {
+	position: relative;
+	width: 640px;
+	margin: 7% auto;
+	background-color: #40404683;
+	animation: Slide_up 3s ease;
+	border-radius: 1.2em;
+}
+
+.blackboard:before {
+	box-sizing: border-box;
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	content: "DDW Details";
+	font-size: 2.2em;
+	color: linear-gradient(60deg, rgba(5, 10, 29, 0.548),rgb(17 17 17));
+	text-align: center;
+	padding-top: 20px;
+}
+.blackboard:hover {
+	background-color: #303035c0;
+	color: white;
+}
+
+.form {
+	padding: 70px 20px 20px;
+}
+.hoverStyling:hover{
+	color: white;
+}
+.paragraphContext {
+	position: relative;
+	margin-bottom: 1em;
+	padding: 1.5em;
+}
+
+.labelValue {
+	vertical-align: middle;
+	font-size: 1.6em;
+	background-image: linear-gradient(60deg, #36374b,rgb(17 17 17));
+	background-clip: text;
+	/* color: transparent; */
+}
+
+.paragraphContext:nth-of-type(5) > .labelValue {
+	vertical-align: top;
+}
+#uploadImageStyle{
+    margin-left: 8em;
+}
+#selectstyling{
+    margin-right: 10em;
+}
+
+#filetypestyle{
+	display: none;
+}
+#filelabel{
+	cursor: pointer;
+	padding: 1.5em;
+	font-size: 1.5em;
+}
+.inputStyle,
+.textareaValue {
+	vertical-align: middle;
+	padding-left: 10px;
+	background: none;
+	border: none;
+	font-size: 1.6em;
+	color: rgba(238, 238, 238, 0.8);
+	line-height: .6em;
+	outline: none;
+	justify-content: space-between;
+	resize: none;
+	overflow-x: hidden;
+	white-space: nowrap;
+}
+
+.spanStyle{
+    width: 20px;
+}
+
+.textareaValue {
+	height: 120px;
+	font-size: 1.4em;
+	line-height: 1em;
+	resize: none;
+}
+#submitButtonStyle{
+	background-image: linear-gradient(60deg, #e7be89,rgb(214, 71, 14));
+	padding: 0.7em;
+	width: 7.2em;
+	border-radius: 1.2em;
+}
+::placeholder{
+	opacity: 1;
+	color: rgba(8, 8, 184, 0.623);
+}
+.inputStyle[type="submit"] {
+	cursor: pointer;
+	color: rgba(238, 238, 238, 0.7);
+	line-height: 1em;
+	padding: 0;
+}
+
+.inputStyle[type="submit"]:focus {
+	background: rgba(238, 238, 238, 0.2);
+	color: rgba(238, 238, 238, 0.2);
+}
+
+::-moz-selection {
+	background: rgba(238, 238, 238, 0.2);
+	color: rgba(238, 238, 238, 0.2);
+	text-shadow: none;
+}
+
+::selection {
+	background: rgba(238, 238, 238, 0.4);
+	color: rgba(238, 238, 238, 0.3);
+	text-shadow: none;
+}
+@keyframes Slide_up{
+	0%{
+		transform: translateY(1000px);
+	}
+	100%{
+		transform: translateY(0);
+	}
+}

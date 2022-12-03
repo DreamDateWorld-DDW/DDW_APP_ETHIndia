@@ -1,0 +1,312 @@
+.containerValue{
+    display: flex;
+    flex-direction: column;
+    margin-top: 5.2em;
+    height: 50em;
+    justify-content: center;
+    align-items: center;
+    --q:#fba54285;
+  }
+  #inputBoxContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    animation: Slide_right 4s ease-in-out;
+  }
+  .containerValue:hover{
+      --q: #fff;
+      color: var(--q);
+  }
+  .profile_container{
+    aspect-ratio: 1/1;
+    width: min(400px,90%);
+    position: relative;
+  }
+  .back{
+    position: relative;
+    box-shadow: 10px 10px 0  #ff4f9b , -10px -10px 0  #b967e2;
+    border-radius: 50%;
+    animation: rotate 4s infinite linear;
+  }
+  .profile{
+    border-radius: 100%;
+    background-image: url(https://images.unsplash.com/photo-1542596768-5d1d21f1cf98?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80);
+    background-size: 100%;
+    background-position: center;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    margin-bottom: 1.2em;
+    border-radius:360px;
+      width: 10vw;
+    height: 10vh;
+      margin-left: 7.2em;
+  }
+  .gone{
+      visibility: hidden;
+  }
+  .name{
+      font-size: 0.8em;
+  }
+  .name:hover{
+      cursor: pointer;
+      color: purple;
+  }
+  .TokenBalance{
+  color: blue;
+  border: 1px solid var(--q);
+  background-color: var(--q);
+  border-radius: 0.7em;
+  padding: 0.5em;
+  width: 12em;
+  }
+  .TokenBalance:hover{
+      color: black;
+      cursor: pointer;
+  }
+  .profile:hover{
+    background-size: 110%;
+    box-shadow: 10px 10px 0  #8d08d0 , -10px -10px 0  #ff006f;
+  }
+  .profile_infos{
+    text-align: center;
+  }
+  @keyframes rotate {
+    to{
+      transform: rotate(360deg);
+    }
+  }
+  .input-group-new {
+    position: relative;
+  }
+  .inputContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .input-group-new .inputNew {
+    padding: 10px;
+    border-radius: 4px;
+    font: inherit;
+    color: #000;
+    background-color: transparent;
+    outline: 2px solid #fff;
+  }
+  .input-group-new .input-label-new {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s;
+    color: #9d9d9d;
+  }
+  
+  .input:focus + .input-label-new,
+  .input:valid + .input-label-new {
+    color: dodgerblue;
+    padding-inline: 5px;
+    background-color: #fff;
+  }
+  
+  .input:is(:focus) {
+    outline-color: transparent;
+  }
+  @keyframes Slide_right{
+      0%{
+          transform: translateX(400px);
+      }
+      100%{
+          transform: translateX(100);
+      }
+  }
+  #buttonTextStyling{
+    width: 12em;
+    height: 3em;
+    border-radius: 1.5em;
+  }
+  
+  #buttonTextStyling:hover{
+    background-color: #fba54285;
+  }
+  
+  
+  .buttonContainer {
+    position: relative;
+    display:block;
+    height: 40px;
+    width: 150px;
+    margin: 10px 7px;
+    padding: 5px 5px;
+    font-weight: 700;
+    font-size: 0.8em;
+    letter-spacing: 2px;
+    color: #f3f0ed;
+    border: 2px #f5f2ef solid;
+    border-radius: 4px;
+    text-transform: uppercase;
+    outline: 0;
+    overflow:hidden;
+    background: none;
+    z-index: 1;
+    cursor: pointer;
+    transition:         0.08s ease-in;
+    -o-transition:      0.08s ease-in;
+    -ms-transition:     0.08s ease-in;
+    -moz-transition:    0.08s ease-in;
+    -webkit-transition: 0.08s ease-in;
+  }
+  
+  .fill:hover {
+    color: whitesmoke;
+  }
+  
+  .fill:before {
+    content: "";
+    position: absolute;
+    background: #f5f3f2;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: -1;
+    -webkit-transition: top 0.09s ease-in;
+  }
+  
+  .fill:hover:before {
+    top: 0;
+  }
+  
+  .fade:before{
+    content:"→";
+    position:absolute;
+    color:#f8f6f5;
+    left: 88%;
+    opacity: 0;
+    -webkit-transition: all 0.2s ease-in;
+  }
+  
+  .fade:hover:before{
+    left:91%;
+    opacity:1;
+  }
+  
+  .fade:hover {
+    border: 0px #fff solid;
+    -webkit-transform: scale(1.04,1.04);
+    -webkit-transition: border 0.3s ease-out;
+    -webkit-transition: transform 250ms cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+  }
+  
+  .arrow{
+    text-align:left;
+    padding-left:17px;
+  }
+  
+  .arrow:before{
+    content:"→";
+    position:absolute;
+    color:#fcf9f7;
+    left: 83%;
+    opacity: 0;
+    -webkit-transition: all 250ms cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+  }
+  
+  .arrow:hover:before{
+    left:84%;
+    opacity:1;
+  }
+  
+  .arrow:hover {
+    width:170px;
+  }
+  
+  
+  .slide:after{
+    content:"Enter Value";
+    position:absolute;
+    width:100%;
+    height:100%;
+    left:0;
+    text-align:center;
+    -webkit-transition: all 400ms cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+  }
+  #inputContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .slide:before {
+    content:"Submit →";
+    height:100%;
+    width:100%;
+    position:absolute;
+    color:#f7f4f2;
+    left:-100%;
+    opacity: 0;
+    -webkit-transition: all 500ms cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+  }
+  
+  .slide:hover{
+    background:#383736;
+  }
+  
+  .slide:hover:before{
+    left:0;
+    opacity:1;
+    color:#fff;
+  }
+  .slide:hover:after{
+    left:100%;
+    opacity:0;
+  }
+  
+  .slide.left:hover{
+    background:none;
+  }
+  
+  .slide.left:before {
+    left:100%;
+    color:#eeeded;
+    -webkit-transition: all 425ms cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+  }
+  
+  .slide.left:hover:before{
+    left:0;
+  }
+  
+  .svg{
+    -webkit-transition: all 150ms cubic-bezier(0.445, 0.050, 0.550, 0.950); 
+  }
+  
+  .svg:before{
+    position:absolute;  
+    content:"";
+    background: url(https://f.cl.ly/items/3H3A0D1N281a2T280F3o/heist.svg) no-repeat center center;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:-1;
+    opacity:0;
+    -webkit-transition: all 250ms cubic-bezier(0.230, 1.000, 0.320, 1.000);
+  }
+  
+  .svg:after {
+    content: "";
+    position: absolute;
+    background: #d19b26;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: -2;
+    -webkit-transition: all 250ms cubic-bezier(0.230, 1.000, 0.320, 1.000); 
+  }
+  .svg:hover{
+    color:white;
+    border: 0px #d19b26 solid;
+  }
+  .svg:hover:before {
+    opacity: .8;
+  }
+  .svg:hover:after {
+    top: 0;
+  }

@@ -1,0 +1,15 @@
+.containerbuttonvalue{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: auto;
+    align-items: center;
+}
+#containingsearchprofile{
+    display: flex;
+    flex-direction: column;
+}
+.hoverStyle:hover{
+    transform: scale(1.5);
+    transition: ease 1.5s;
+}
