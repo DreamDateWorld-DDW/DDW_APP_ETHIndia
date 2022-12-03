@@ -13,3 +13,17 @@
     transform: scale(1.5);
     transition: ease 1.5s;
 }
+#columnContainerValue{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#mapImages{
+    padding: 2.2em;
+    transition: ease 1.2s;
+    color: azure;
+}
+#mapImages:hover{
+    transition: ease 1.2s;
+    transform: scale(1.2);
+}
