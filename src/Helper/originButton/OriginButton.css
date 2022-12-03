@@ -1,0 +1,77 @@
+.topListing {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+ .topListing h1 {
+    --c: rgb(251, 107, 107);
+    color: #ffffff;
+    font-size: 2em;
+    border-radius: 0.5em;
+    width: 10em;
+    height: 3em;
+    text-transform: uppercase;
+    font-weight: 15em;
+    letter-spacing: 0.1em;
+    text-align: center;
+    line-height: 3em;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: 0.5s;
+    margin: 1em;
+}
+
+ .topListing h1 span {
+    position: absolute;
+    width: 25%;
+    height: 50%;
+    background-color: var(--c);
+    transform: translateY(150%);
+    border-radius: 50%;
+    left: calc((var(--n) - 1) * 25%);
+    transition: 0.5s;
+    transition-delay: calc((var(--n) - 1) * 0.1s);
+    z-index: -1;
+}
+
+ .topListing h1:hover {
+    color: black;
+}
+
+ .topListing h1:hover span {
+    transform: translateY(0) scale(2);
+}
+
+ .topListing h1 span:nth-child(1) {
+    --n: 1;
+}
+
+ .topListing h1 span:nth-child(2) {
+    --n: 2;
+}
+
+ .topListing h1 span:nth-child(3) {
+    --n: 3;
+}
+
+ .topListing h1 span:nth-child(4) {
+    --n: 4;
+}
+.gone {
+    display: none;
+}
+#gone{
+    display: none;
+}
+@media only screen and (max-width: 1000px) {
+    .topListing h1{
+      font-size: 14px;
+    }
+  }
+@media only screen and (max-width: 700px) {
+    .topListing h1{
+      font-size: 12px;
+    }
+  }
