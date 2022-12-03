@@ -13,7 +13,7 @@ const Profile = () => {
 
     const [imageFile, setImageFile] = useState(null);
     const [userDetails, setuserDetails] = useState({
-        name: location.state.name , blockchain: location.state.blockchain, id: location.state.id, wallet: location.state.wallet, bio: " ", interest: [], gender: " ", image: " ",
+       
 
     });
     const [imageIPFS, setImageIPFS] = useState(null);
@@ -210,7 +210,10 @@ const Profile = () => {
 								<label className='hoverStyling labelValue'>Bio: </label>
 								<textarea style={{	borderBottom: "1.5px solid rgb(7, 4, 4)"}} className='inputStyle' type="text" onChange={handleInputs} wrap='off' name="bio" />
 						</p>
-                        <WorldIDWidget
+                        <span style={{zIndex : "250"}}> 
+                        </span>
+                        <span id="worldIDWidget">
+        <WorldIDWidget
                             actionId="wid_staging_11b40fb572777a7a1c03a9b2dd43ca1f" // obtain this from developer.worldcoin.org
                             signal={`verify_account`}
                             enableTelemetry
@@ -233,11 +236,15 @@ const Profile = () => {
                             } // you'll actually want to pass the proof to the API or your smart contract
                             onError={(error) => console.error(error)}
                         />
+                        </span>
+
 						<p className="wipeout paragraphContext">
 								<input id='submitButtonStyle' className='inputStyle' onClick={callbackFunction} type="submit" value="Submit" />
 						</p>
 				</form>
+
 		</div>
+
 </div> 
     </>
   )
