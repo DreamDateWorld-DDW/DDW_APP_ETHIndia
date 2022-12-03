@@ -3,19 +3,56 @@ import { createDDWAppWriteContractMatic } from '../../Helper/polygon/writeContra
 import { createDDWAppWriteContractEth } from '../../Helper/ethereum/writeContract';
 import { read_from_ipfs } from '../../Helper/web3storage';
 import "./MyProfile.css"
-import { app_read_contract_eth } from '../../Helper/ethereum/readContract';
-import { app_read_contract_matic } from '../../Helper/polygon/readContract';
+import { app_read_contract_eth, app_token_read_contract_eth, ddw_token_read_contract_eth } from '../../Helper/ethereum/readContract';
+import { app_read_contract_matic, app_token_read_contract_matic, ddw_token_read_contract_matic } from '../../Helper/polygon/readContract';
 import { shorten_address } from '../../Helper/utilities';
+import { ethers } from 'ethers';
 const MyProfile = ({location}) => {
     const [visibilityDDW, setVisibilityDDW] = useState(false);
     const [visibilitySBT, setVisibilitySBT] = useState(false);
     var wallet = location.state.userDetails.wallet;
     var blockchain = location.state.userDetails.blockchain;
     const [matches, setMatches] = useState([]);
+    const [DDWToken, setDDWToken] = useState(0);
+    const [APPToken, setAPPToken] = useState(0);
 
     useEffect(()=>{
         loadMatchesData(wallet);
     }, []);
+
+    const getDDWBalance = async ()=> {
+      if(blockchain === "eth")
+      {
+        var balance = await ddw_token_read_contract_eth.balanceOf(wallet);
+        var denom = ethers.utils.parseUnits('1', 18);
+        var value = balance.div(denom).toNumber();
+        setDDWToken(value);
+      }
+      else if(blockchain === "matic")
+      {
+        var balance = await ddw_token_read_contract_matic.balanceOf(wallet);
+        var denom = ethers.utils.parseUnits('1', 18);
+        var value = balance.div(denom).toNumber();
+        setDDWToken(value);
+      }
+    }
+
+    const getAPPBalance = async ()=> {
+      if(blockchain === "eth")
+      {
+        var balance = await app_token_read_contract_eth.balanceOf(wallet);
+        var denom = ethers.utils.parseUnits('1', 18);
+        var value = balance.div(denom).toNumber();
+        setAPPToken(value);
+      }
+      else if(blockchain === "matic")
+      {
+        var balance = await app_token_read_contract_matic.balanceOf(wallet);
+        var denom = ethers.utils.parseUnits('1', 18);
+        var value = balance.div(denom).toNumber();
+        setAPPToken(value);
+      }
+    }
 
     const loadMatchesData = async (wallet) => {
       var matchListOnChain = [];
@@ -120,10 +157,10 @@ const MyProfile = ({location}) => {
           <div className="profile_infos">
           <h1 className="name">{location.state.userDetails.name}</h1>
           <h2 className="occupation">{shorten_address(location.state.userDetails.wallet)}</h2>
-          <h2 onClick={()=> setVisibilityDDW(!visibilityDDW)} className="TokenBalance">DDW Token balance </h2>
-          <h2 className={visibilityDDW ? "" : "gone" }>balance</h2>
-          <h2 onClick={()=> setVisibilitySBT(!visibilitySBT)} className="TokenBalance">SBT Token balance </h2>
-          <h2 className={visibilitySBT ? "" : "gone" }>balance</h2>
+          <h2 onClick={async ()=> {if(!visibilityDDW) await getDDWBalance(); setVisibilityDDW(!visibilityDDW)}} className="TokenBalance">DDW Token balance </h2>
+          <h2 className={visibilityDDW ? "" : "gone" }>{DDWToken}</h2>
+          <h2 onClick={async ()=> {if(!visibilitySBT) await getAPPBalance(); setVisibilitySBT(!visibilitySBT)}} className="TokenBalance">SBT Token balance </h2>
+          <h2 className={visibilitySBT ? "" : "gone" }>{APPToken}</h2>
           <span>Enter Username</span>
           <div className='inputContainer'>
           <div className="input-group input">
