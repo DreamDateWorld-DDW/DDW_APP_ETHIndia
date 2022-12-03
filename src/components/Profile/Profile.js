@@ -7,6 +7,9 @@ import uploadBox from "../../Helper/uploadBox.png"
 import { useLocation, useNavigate } from 'react-router-dom';
 import { write_to_ipfs } from '../../Helper/web3storage'
 import { WorldIDWidget } from '@worldcoin/id'
+import { isWalletCorrect } from '../../Helper/contract'
+import { createDDWAppWriteContractMatic } from '../../Helper/polygon/writeContract'
+import { createDDWAppWriteContractEth } from '../../Helper/ethereum/writeContract'
 const Profile = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -71,10 +74,35 @@ const Profile = () => {
             info_ipfs_cid = infoIPFS;
             console.log("unchanged everything", info_ipfs_cid);
         }
-        var isItRightWallet = true
-        if(!isItRightWallet) {
-            alert(`Wrong Wallet. You should switcht to ${userDetails.wallet}`);
+        if(userDetails.blockchain === "matic") {
+            var isItRightWallet = await isWalletCorrect(userDetails.wallet, "matic");
+            if(!isItRightWallet) {
+                alert(`Wrong Wallet. You should switcht to ${userDetails.wallet}`);
+                return;
+            }
+            const Contract = createDDWAppWriteContractMatic();
+            try {
+            let nftTx = await Contract.register(info_ipfs_cid);
+            console.log("Mining....", nftTx.hash);
+            } catch (error) {
+            console.log("Error reg", error);
             return;
+            }
+        }
+        else if(userDetails.blockchain === "eth") {
+            var isItRightWallet = await isWalletCorrect(userDetails.wallet, "eth");
+            if(!isItRightWallet) {
+                alert(`Wrong Wallet. You should switcht to ${userDetails.wallet}`);
+                return;
+            }
+            const Contract = createDDWAppWriteContractEth();
+            try {
+            let nftTx = await Contract.register(info_ipfs_cid);
+            console.log("Mining....", nftTx.hash);
+            } catch (error) {
+            console.log("Error reg", error);
+            return;
+            }
         }
         var mongoData = {
             date: new Date(Date.now()),

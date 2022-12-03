@@ -1,14 +1,16 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom';
 import MyProfile from '../MyProfile/MyProfile'
 import "./UserDashboard.css"
 const UserDasBoard = () => {
 
+  const location = useLocation();
     
   return (
     <>
     <div className='wrapContent'>
       <div id='borderContainer'>
-      <MyProfile/>
+      <MyProfile location={location}/>
       <div id='imageTagContainer'>
         <h1>Matches</h1>
       <img id='profile-pic' className="profile-pic"
