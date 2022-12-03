@@ -9,6 +9,7 @@ import Button from '../Button/Button'
 import "./Navbar.css"
 import { shorten_address } from '../../Helper/utilities';
 import { app_read_contract_matic } from '../../Helper/polygon/readContract';
+import { app_read_contract_eth } from '../../Helper/ethereum/readContract';
 
 const Navbar = () => {
     useEffect(() => {
@@ -72,6 +73,48 @@ const Navbar = () => {
           return;
         }
         var user_details = await app_read_contract_matic.get_user_details(accountAddress);
+        var files = await read_from_ipfs(user_details, "userInfo.json");
+        if(files[0]) {
+          files = files[1]
+          console.log(files);
+          var userDetails = {};
+          let reader = new FileReader();
+          reader.readAsText(files[0]);
+          reader.onload = function() {
+          userDetails = JSON.parse(reader.result);
+          console.log(userDetails);
+          read_from_ipfs(userDetails.image, "avatar.png").then((image_files) => {
+            if(image_files[0])
+            navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: window.URL.createObjectURL(image_files[1][0])}});
+            else
+            navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: image_files[1]}});
+          })
+          };
+        }
+        else {
+          userDetails = files[1];
+          console.log(userDetails);
+          read_from_ipfs(userDetails.image, "avatar.png").then((image_files) => {
+            if(image_files[0])
+            navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: window.URL.createObjectURL(image_files[1][0])}});
+            else
+            navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: image_files[1]}});
+          })
+        }
+      }
+
+      async function loginWithEth() {
+        let accountAddress = await checkAndGetAddress("eth");
+        console.log(accountAddress)
+    
+        if(!accountAddress) return null;
+    
+        var resource = await app_read_contract_eth.is_account_registered(accountAddress);
+        if(!resource) {
+          alert("You are not Registered");
+          return;
+        }
+        var user_details = await app_read_contract_eth.get_user_details(accountAddress);
         var files = await read_from_ipfs(user_details, "userInfo.json");
         if(files[0]) {
           files = files[1]
@@ -197,7 +240,7 @@ const Navbar = () => {
         <OriginButton  buttonText = {loginBoolValueChange ? "Close" : "Login"} />
         </div>
         <div id = {loginBoolValueChange ? "" : "gone"}>
-        <Button buttonText = " Ethereum" onClick={walletLoginEthereum}/>
+        <Button buttonText = " Ethereum" onClick={loginWithEth}/>
         <Button buttonText = " Polygon" onClick={loginWithMetamask}/>
     </div>
     <div id = {loginBoolValueChange ? "gone" : ""} onClick={() => setRegisterBoolValueChange(!registerBoolValueChange)}>

@@ -9,7 +9,7 @@ export const createDDWAppWriteContractEth = () => {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner()
             const Contract = new ethers.Contract(
-                process.env.REACT_APP_DDWAPP_CONTRACT_ADDRESS,
+                process.env.REACT_APP_DDWAPP_CONTRACT_ADDRESS_ETH,
                 ddwapp_abi,
                 signer
             );
@@ -30,7 +30,7 @@ export const createDDWTokenWriteContractEth = () => {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner()
             const Contract = new ethers.Contract(
-                process.env.REACT_APP_DDWTOKEN_CONTRACT_ADDRESS,
+                process.env.REACT_APP_DDWTOKEN_CONTRACT_ADDRESS_ETH,
                 ddw_token_abi,
                 signer
             );

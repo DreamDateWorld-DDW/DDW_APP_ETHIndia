@@ -6,13 +6,14 @@ import src from "../../Helper/dating_background.jpeg"
 import uploadBox from "../../Helper/uploadBox.png"
 import { useLocation, useNavigate } from 'react-router-dom';
 import { write_to_ipfs } from '../../Helper/web3storage'
+import { WorldIDWidget } from '@worldcoin/id'
 const Profile = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
     const [imageFile, setImageFile] = useState(null);
     const [userDetails, setuserDetails] = useState({
-        name: "location.state.name" , blockchain: "location.state.blockchain", id: "location.state.id", wallet: "location.state.wallet", bio: " ", interest: [], gender: " ", image: " ",
+        name: location.state.name , blockchain: location.state.blockchain, id: location.state.id, wallet: location.state.wallet, bio: " ", interest: [], gender: " ", image: " ",
 
     });
     const [imageIPFS, setImageIPFS] = useState(null);
@@ -118,6 +119,41 @@ const Profile = () => {
         }
     }
 
+    async function verifyWorldId(
+        proof,
+        nullifier_hash,
+        merkle_root,
+        signal,
+        action_id
+    ) {
+        try {
+            const response = await fetch(
+                `https://developer.worldcoin.org/api/v1/verify`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action_id: action_id,
+                        signal: signal,
+                        proof: proof,
+                        nullifier_hash: nullifier_hash,
+                        merkle_root: merkle_root,
+                    }),
+                }
+            );
+            const data = await response.json();
+            if (data?.code === 'already_verified') {
+                alert(data?.detail);
+            }
+            return data?.success === true ? true : false; //remove || true if it is there
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
 
     const options = [
         { id: 1, Interest: "Nightclubs" },
@@ -174,6 +210,29 @@ const Profile = () => {
 								<label className='hoverStyling labelValue'>Bio: </label>
 								<textarea style={{	borderBottom: "1.5px solid rgb(7, 4, 4)"}} className='inputStyle' type="text" onChange={handleInputs} wrap='off' name="bio" />
 						</p>
+                        <WorldIDWidget
+                            actionId="wid_staging_11b40fb572777a7a1c03a9b2dd43ca1f" // obtain this from developer.worldcoin.org
+                            signal={`verify_account`}
+                            enableTelemetry
+                            onSuccess={async (res) => {
+								console.log(res);
+								let verifyStatus = false;
+								if (res) {
+									verifyStatus = await verifyWorldId(
+										res.proof,
+										res.nullifier_hash,
+										res.merkle_root,
+										`verify_account`,
+										"wid_staging_11b40fb572777a7a1c03a9b2dd43ca1f"
+									);
+								}
+								if (verifyStatus) {
+									alert("Status Verified")
+								}
+							}
+                            } // you'll actually want to pass the proof to the API or your smart contract
+                            onError={(error) => console.error(error)}
+                        />
 						<p className="wipeout paragraphContext">
 								<input id='submitButtonStyle' className='inputStyle' onClick={callbackFunction} type="submit" value="Submit" />
 						</p>
