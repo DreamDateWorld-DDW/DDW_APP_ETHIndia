@@ -98,12 +98,12 @@ const MatchProfile = () => {
         {isChatAndVcVisible && (<div id = "visibleHuddle">
             <HuddleIframe config={iframeConfig} />
         </div>)}
-            <Chat
-   account="0x6430C47973FA053fc8F055e7935EC6C2271D5174"
-   supportAddress="0xd9c1CCAcD4B8a745e191b62BA3fcaD87229CB26d"
-   apiKey="jVPMCRom1B.iDRMswdehJG7NpHDiECIHwYMMv6k2KzkPJscFIDyW8TtSnk4blYnGa8DIkfuacU0"
+            {isChatAndVcVisible && (<Chat
+   account={userDetails.wallet}
+   supportAddress={matchDetails.wallet}
+   apiKey={process.env.REACT_APP_PUSH_API_KEY}
     env="staging"
- />
+ />)}
 
     </>
   )

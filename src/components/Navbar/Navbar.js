@@ -55,7 +55,7 @@ const Navbar = () => {
         }
         await checkCorrectNetwork("eth");
         let returnArray = await ConnectWalletHandler();
-        setMetamaskWalletAddress(returnArray[0]);
+        setEthereumWalletAddress(returnArray[0]);
         setWalletConnected(true);
         setBlockchain("eth");
         return returnArray[0];

@@ -13,12 +13,13 @@ const Profile = () => {
 
     const [imageFile, setImageFile] = useState(null);
     const [userDetails, setuserDetails] = useState({
-       
+        name: location.state.name , blockchain: location.state.blockchain, id: location.state.id, wallet: location.state.wallet, bio: " ", interest: [], gender: " ", image: " ",
 
     });
     const [imageIPFS, setImageIPFS] = useState(null);
     const [infoIPFS, setInfoIPFS] = useState(null);
-    const [selectedOptions, setSelectedOptions] = useState([])
+    const [selectedGenderOptions, setSelectedGenderOptions] = useState([])
+    const [selectedInterestOptions, setSelectedInterestOptions] = useState([])
     const handleInterest = async (values) => {
         setuserDetails({ ...userDetails, interest: values.map((el) => el.label) })
         setInfoIPFS(null)
@@ -102,7 +103,7 @@ const Profile = () => {
         navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: window.URL.createObjectURL(imageFile)}});
     }
     function previewImage() {
-        var preview = document.querySelector('img');
+        var preview = document.querySelector('img[id=uploadedimage]');
         var file = document.querySelector('input[type=file]').files[0];
         var reader = new FileReader();
 
@@ -179,7 +180,7 @@ const Profile = () => {
 		<div className="blackboard">
 				<form onSubmit={handleInputs} className="form">
                         <p id='uploadImageStyle' className='paragraphContext'>
-                                <img src={src} alt="/" height="100" width="100" />
+                                <img id='uploadedimage' src={src} alt="/" height="100" width="100" />
                                 <label id='filelabel' style={{color:"black"}}>
                                 <span className='hoverStyling' style={{marginRight: "1.2em"}}>Upload</span>
                                 <img id='uploadbox' height={40} width={40} src={uploadBox} alt="uploadBox" />
@@ -188,13 +189,13 @@ const Profile = () => {
                         </p>
 						<p className='paragraphContext'>
 								<label className='labelValue hoverStyling'>Name: </label>
-								<input className='inputStyle' type="text" />
+								<input className='inputStyle' readOnly value={userDetails.name} type="text" />
 						</p>
                         <label id='selectstyling' className='labelValue hoverStyling'>Interest: </label>
                         <Select  options={options.map((item, index) => {
                         return { value: item.id, label: item.Interest }
                         })}
-                        values={selectedOptions} onChange={(values) => { setSelectedOptions([...values]); handleInterest(values)}}
+                        values={selectedInterestOptions} onChange={(values) => { setSelectedInterestOptions([...values]); handleInterest(values)}}
                         style={styles}
                         multi= "true"
                         placeholder = "Interests" />
@@ -202,8 +203,8 @@ const Profile = () => {
                         <Select  options={genderOptions.map((item, index) => {
                         return { value: item.id, label: item.Gender }
                         })}
-                        values={selectedOptions} 
-                        onChange={(values) => { setSelectedOptions([...values]); handleGender(values) }}
+                        values={selectedGenderOptions} 
+                        onChange={(values) => { setSelectedGenderOptions([...values]); handleGender(values) }}
                         style={styles}
                         placeholder = "Gender" />
 						<p className='paragraphContext'>
@@ -214,7 +215,7 @@ const Profile = () => {
                         </span>
                         <span id="worldIDWidget">
         <WorldIDWidget
-                            actionId="wid_staging_11b40fb572777a7a1c03a9b2dd43ca1f" // obtain this from developer.worldcoin.org
+                            actionId={process.env.REACT_APP_WORLDCOIN_ACTION_ID} // obtain this from developer.worldcoin.org
                             signal={`verify_account`}
                             enableTelemetry
                             onSuccess={async (res) => {
@@ -226,7 +227,7 @@ const Profile = () => {
 										res.nullifier_hash,
 										res.merkle_root,
 										`verify_account`,
-										"wid_staging_11b40fb572777a7a1c03a9b2dd43ca1f"
+										process.env.REACT_APP_WORLDCOIN_ACTION_ID
 									);
 								}
 								if (verifyStatus) {
