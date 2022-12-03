@@ -1,0 +1,20 @@
+.navbarContainer{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    transition: visibility 0s linear 300ms, opacity 300ms;
+}
+
+.visible{
+    visibility: visible;
+}
+#gone{
+    display: none;
+    
+}
