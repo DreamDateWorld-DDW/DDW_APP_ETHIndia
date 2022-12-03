@@ -1,7 +1,6 @@
 import React from 'react'
-import OriginButton from '../../Helpers/originButton/OriginButton'
 import MyProfile from '../MyProfile/MyProfile'
-import "./UserDashBoard.css"
+import "./UserDashboard.css"
 const UserDasBoard = () => {
 
     

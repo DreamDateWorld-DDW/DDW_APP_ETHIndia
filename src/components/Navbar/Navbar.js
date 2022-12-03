@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 // import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { accountChangeHandler, chainChangedHandler, checkCorrectNetwork, ConnectWalletHandler } from "../../Helpers/contract";
-import { read_from_ipfs } from "../../Helpers/web3storage"
-import OriginButton from '../../Helpers/originButton/OriginButton'
+import { accountChangeHandler, chainChangedHandler, checkCorrectNetwork, ConnectWalletHandler } from "../../Helper/contract";
+import { read_from_ipfs } from "../../Helper/web3storage"
+import OriginButton from '../../Helper/originButton/OriginButton'
 import Button from '../Button/Button'
 import "./Navbar.css"
 

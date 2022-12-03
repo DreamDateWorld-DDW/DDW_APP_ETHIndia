@@ -2,13 +2,13 @@ import {React, useState} from 'react'
 import "./Profile.css"
 import Select from 'react-dropdown-select'
 import axios from 'axios'
-import src from "../../Helpers/dating_background.jpeg"
-import uploadBox from "../../Helpers/uploadBox.png"
-// import { useLocation, useNavigate } from 'react-router-dom';
-import { write_to_ipfs } from '../../Helpers/web3storage'
+import src from "../../Helper/dating_background.jpeg"
+import uploadBox from "../../Helper/uploadBox.png"
+import { useLocation, useNavigate } from 'react-router-dom';
+import { write_to_ipfs } from '../../Helper/web3storage'
 const Profile = () => {
-    // const navigate = useNavigate();
-    // const location = useLocation();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [imageFile, setImageFile] = useState(null);
     const [userDetails, setuserDetails] = useState({
@@ -98,7 +98,7 @@ const Profile = () => {
               'Content-Type': 'application/json'
             }})
           console.log(res.status);
-        // navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: window.URL.createObjectURL(imageFile)}});
+        navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: window.URL.createObjectURL(imageFile)}});
     }
     function previewImage() {
         var preview = document.querySelector('img');

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom';
-import { read_from_ipfs } from '../../Helpers/web3storage';
+import { read_from_ipfs } from '../../Helper/web3storage';
 import "./MyProfile.css"
 const MyProfile = () => {
     const [visibilityDDW, setVisibilityDDW] = useState(false);

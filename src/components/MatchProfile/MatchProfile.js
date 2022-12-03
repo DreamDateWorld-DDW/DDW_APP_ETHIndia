@@ -1,7 +1,7 @@
 import {React, useState} from 'react'
 // import { useLocation, useNavigate } from 'react-router-dom'
 import "./MatchProfile.css"
-import OriginButton from '../../Helpers/originButton/OriginButton'
+import OriginButton from '../../Helper/originButton/OriginButton'
 
 const MatchProfile = () => {
     const [matchDetails, setMatchDetails] = useState("location.state.matchData");

@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
-import OriginButton from '../../Helpers/originButton/OriginButton'
+import OriginButton from '../../Helper/originButton/OriginButton'
 import { useLocation, useNavigate } from 'react-router-dom'
 import "./SearchProfile.css"
 
 const SearchProfile = () => {
-    // const navigate = useNavigate();
-    // const location = useLocation();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [searchDetails, setSearchDetails] = useState("location.state.searchData");
     const [userDetails, setuserDetails] = useState("location.state.userDetails");
     const [classNameValue, setClassNameValue] = useState("")
@@ -24,7 +24,7 @@ const SearchProfile = () => {
             return;
         }
         alert("Liked, now see if they like you back ;)");
-        // navigate('/Userdashboard', {state: {userDetails: userDetails, imageSrc: "location.state.imageSrc"}});
+        navigate('/Userdashboard', {state: {userDetails: userDetails, imageSrc: "location.state.imageSrc"}});
 
     }
 
@@ -35,7 +35,7 @@ const SearchProfile = () => {
             return;
         }
         alert("Super Liked, now see if they like you back ;)");
-        // navigate('/Userdashboard', {state: {userDetails: userDetails, imageSrc: location.state.imageSrc}});
+        navigate('/Userdashboard', {state: {userDetails: userDetails, imageSrc: location.state.imageSrc}});
 
     }
   return (
@@ -46,13 +46,13 @@ const SearchProfile = () => {
       src="https://cdn.discordapp.com/attachments/963207924656795680/1027005573499199609/3982230923_Gigachad.png"
       alt='profile-image' />
       <h1>
-          Bio <span>{`Bio : ${searchDetails.bio}`} </span>
+           <span>{`Bio : ${searchDetails.bio}`} </span>
       </h1>
       <h1>
-          Gender <span>{`Gender : ${searchDetails.gender}`}</span>
+           <span>{`Gender : ${searchDetails.gender}`}</span>
       </h1>
       <h1>
-          Interest <span>{`Interest : ${searchDetails.interest}`}</span>
+           <span>{`Interest : ${searchDetails.interest}`}</span>
       </h1>
       <div className='containerbuttonvalue'>
     <OriginButton buttonText = "Like"/>
