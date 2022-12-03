@@ -6,9 +6,9 @@ import Navbar from './components/Navbar/Navbar'
 import Profile from './components/Profile/Profile'
 import SearchProfile from "./components/SearchProfile/SearchProfile"
 import Logo from "./components/Logo/Logo"
-
-
+ 
 function App() {
+  
   return (
     <>
     <Logo/>

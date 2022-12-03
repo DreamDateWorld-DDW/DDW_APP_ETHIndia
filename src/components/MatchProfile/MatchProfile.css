@@ -10,6 +10,12 @@
   text-decoration: none;
   color: #fff;
 }
+#gone{
+  visibility: hidden;
+}
+#visibleHuddle{
+  height: 80vh;
+}
 .main {
   background: #1C1C25;
   border-radius: 25px;
@@ -123,12 +129,6 @@
   border-radius: 12px;
   border-style: dashed;
 }
-/* End of General/Mobile version */
-/*
-*
-*
-*
-*/
 @media (min-width: 700px) {
   .main {
   transition: 0.3s;
