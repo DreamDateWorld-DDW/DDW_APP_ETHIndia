@@ -2,7 +2,7 @@ import React from 'react'
 import Matchelement from '../MatchElement/MatchElement';
 import { useNavigate } from 'react-router-dom';
 
-const MatchList = () => {
+const MatchList = (props) => {
     const navigate = useNavigate();
     const handleOnClick = (matchData) => {
     navigate('/Matchprofile', { state: {matchData: matchData, userDetails: props.userDetails, imageSrc: props.imageSrc} })
