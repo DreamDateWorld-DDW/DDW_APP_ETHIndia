@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { accountChangeHandler, chainChangedHandler, checkCorrectNetwork, ConnectWalletHandler } from "../../Helper/contract";
+import { accountChangeHandler, chainChangedHandler, checkAndGetAddress, checkCorrectNetwork, ConnectWalletHandler } from "../../Helper/contract";
 import { read_from_ipfs } from "../../Helper/web3storage"
 import OriginButton from '../../Helper/originButton/OriginButton'
 import Button from '../Button/Button'
 import "./Navbar.css"
+import { shorten_address } from '../../Helper/utilities';
+import { app_read_contract_matic } from '../../Helper/polygon/readContract';
 
 const Navbar = () => {
     useEffect(() => {
@@ -14,11 +16,12 @@ const Navbar = () => {
       },[]);
       const [discordName, setDiscordName] = useState("Set Discord");
       const [discordId, setDiscordId] = useState(null);
-      const [metamaskWalletAddress, setMetamaskWalletAddress] = useState(" Metamask");
+      const [metamaskWalletAddress, setMetamaskWalletAddress] = useState(" Polygon");
+      const [ethereumWalletAddress, setEthereumWalletAddress] = useState(" Ethereum");
       const [blockchain, setBlockchain] = useState(null);
       const [discordConnected, setDiscordConnected] = useState(false);
       const [walletConnected, setWalletConnected] = useState(false);
-    //   const navigate = useNavigate();
+      const navigate = useNavigate();
       const [loginBoolValueChange, setLoginBoolValueChange] = useState(false) 
       const [registerBoolValueChange, setRegisterBoolValueChange] = useState(false)
 
@@ -30,26 +33,82 @@ const Navbar = () => {
       }
       
       async function walletLoginMetamask() {
-        if(blockchain==="ethereum") {
+        if(blockchain==="eth") {
           alert("Can only Register with one Blockchain");
           window.location.reload();
           return;
         }
-        await checkCorrectNetwork();
+        await checkCorrectNetwork("matic");
         let returnArray = await ConnectWalletHandler();
         setMetamaskWalletAddress(returnArray[0]);
         setWalletConnected(true);
-        setBlockchain("metamask");
+        setBlockchain("matic");
         return returnArray[0];
       }
     
+      async function walletLoginEthereum() {
+        if(blockchain==="matic") {
+          alert("Can only Register with one Blockchain");
+          window.location.reload();
+          return;
+        }
+        await checkCorrectNetwork("eth");
+        let returnArray = await ConnectWalletHandler();
+        setMetamaskWalletAddress(returnArray[0]);
+        setWalletConnected(true);
+        setBlockchain("eth");
+        return returnArray[0];
+      }
+
+      async function loginWithMetamask() {
+        let accountAddress = await checkAndGetAddress("matic");
+        console.log(accountAddress)
+    
+        if(!accountAddress) return null;
+    
+        var resource = await app_read_contract_matic.is_account_registered(accountAddress);
+        if(!resource) {
+          alert("You are not Registered");
+          return;
+        }
+        var user_details = await app_read_contract_matic.get_user_details(accountAddress);
+        var files = await read_from_ipfs(user_details, "userInfo.json");
+        if(files[0]) {
+          files = files[1]
+          console.log(files);
+          var userDetails = {};
+          let reader = new FileReader();
+          reader.readAsText(files[0]);
+          reader.onload = function() {
+          userDetails = JSON.parse(reader.result);
+          console.log(userDetails);
+          read_from_ipfs(userDetails.image, "avatar.png").then((image_files) => {
+            if(image_files[0])
+            navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: window.URL.createObjectURL(image_files[1][0])}});
+            else
+            navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: image_files[1]}});
+          })
+          };
+        }
+        else {
+          userDetails = files[1];
+          console.log(userDetails);
+          read_from_ipfs(userDetails.image, "avatar.png").then((image_files) => {
+            if(image_files[0])
+            navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: window.URL.createObjectURL(image_files[1][0])}});
+            else
+            navigate("/Userdashboard", {state: {userDetails: userDetails, imageSrc: image_files[1]}});
+          })
+        }
+      }
     
     
       async function onProceed() {
         if(walletConnected && discordConnected) {
-        }
-        else
-        alert("Connect Wallet and Discord to Proceed");
+          navigate("/Profile", { state: { name: discordName, blockchain: blockchain, id: discordId, wallet: blockchain==="matic"?metamaskWalletAddress:ethereumWalletAddress } })
+          }
+          else
+          alert("Connect Wallet and Discord to Proceed");
       }
     
       const getInfo = async (code) => {
@@ -127,7 +186,7 @@ const Navbar = () => {
     }
     
     detectEthereumProvider().then((provider) => {
-      provider.on("accountsChanged", async (newAccount) => {setMetamaskWalletAddress( await accountChangeHandler(newAccount))});
+      provider.on("accountsChanged", async (newAccount) => {blockchain === "matic"?setMetamaskWalletAddress( await accountChangeHandler(newAccount)):setEthereumWalletAddress(await accountChangeHandler(newAccount))});
       provider.on("chainChanged", chainChangedHandler);
     });
 
@@ -138,8 +197,8 @@ const Navbar = () => {
         <OriginButton  buttonText = {loginBoolValueChange ? "Close" : "Login"} />
         </div>
         <div id = {loginBoolValueChange ? "" : "gone"}>
-        <Button buttonText = " Ethereum" />
-        <Button buttonText = " Metamask" />
+        <Button buttonText = " Ethereum" onClick={walletLoginEthereum}/>
+        <Button buttonText = " Polygon" onClick={loginWithMetamask}/>
     </div>
     <div id = {loginBoolValueChange ? "gone" : ""} onClick={() => setRegisterBoolValueChange(!registerBoolValueChange)}>
         <OriginButton buttonText = {registerBoolValueChange ? "Close" : "Register"}/>
@@ -147,8 +206,8 @@ const Navbar = () => {
         <div id = {registerBoolValueChange ? "" : "gone"}>
         <Button buttonText = "Join Discord" />
         <Button link = {process.env.REACT_APP_OAUTH_LINK} buttonText = {discordName} />
-        <Button buttonText = {metamaskWalletAddress} onClick={walletLoginMetamask} />
-        <Button buttonText = {metamaskWalletAddress} onClick={walletLoginMetamask} />
+        <Button buttonText = {shorten_address(metamaskWalletAddress)} onClick={walletLoginMetamask} />
+        <Button buttonText = {shorten_address(ethereumWalletAddress)} onClick={walletLoginEthereum} />
         </div>
         <OriginButton onClick={onProceed} buttonText = "Proceed"/>
     </div>

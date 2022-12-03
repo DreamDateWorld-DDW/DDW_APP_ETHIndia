@@ -1,11 +1,20 @@
 import { Web3Storage} from 'web3.storage'
+import axios from 'axios'
 
-export const read_from_ipfs = async (ipfs_cid) => {
+export const read_from_ipfs = async (ipfs_cid, filename) => {
     const storage = new Web3Storage({ token: process.env.REACT_APP_WEB3_STORAGE_API_TOKEN });
-    var res = await storage.get(ipfs_cid);
+    try {var res = await storage.get(ipfs_cid);
     if(res.ok) {
         var files = await res.files();
-        return files;
+        return [true,files];
+    }
+    }   
+    catch(err) {
+        if(filename.endsWith(".png")) {
+        return [false, `https://${ipfs_cid}.ipfs.w3s.link/${filename}`];
+        }
+        var response = await axios.get(`https://${ipfs_cid}.ipfs.w3s.link/${filename}`);
+        return [false, response.data];
     }
     return null;
 

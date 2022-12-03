@@ -1,13 +1,14 @@
 import { ethers } from 'ethers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
-export const checkCorrectNetwork = async () => {
+export const checkCorrectNetwork = async (chainName) => {
   const provider = await detectEthereumProvider();
-    if (provider.networkVersion !== parseInt(process.env.REACT_APP_CHAIN_ID)) {
+  if(chainName === "matic") {
+    if (provider.networkVersion !== parseInt(process.env.REACT_APP_CHAIN_ID_MATIC)) {
       try {
         await provider.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: ethers.utils.hexValue(parseInt(process.env.REACT_APP_CHAIN_ID)) }],
+          params: [{ chainId: ethers.utils.hexValue(parseInt(process.env.REACT_APP_CHAIN_ID_MATIC)) }],
         });
       } catch (err) {
         if (err.code === 4902) {
@@ -15,16 +16,41 @@ export const checkCorrectNetwork = async () => {
             method: "wallet_addEthereumChain",
             params: [
               {
-                chainName: process.env.REACT_APP_CHAIN_NAME,
-                chainId: ethers.utils.hexValue(parseInt(process.env.REACT_APP_CHAIN_ID)),
+                chainName: process.env.REACT_APP_CHAIN_NAME_MATIC,
+                chainId: ethers.utils.hexValue(parseInt(process.env.REACT_APP_CHAIN_ID_MATIC)),
                 nativeCurrency: { name: "MATIC", decimals: 18, symbol: "MATIC" },
-                rpcUrls: [process.env.REACT_APP_RPC_URL],
+                rpcUrls: [process.env.REACT_APP_RPC_URL_MATIC],
               },
             ],
           });
         }
       }
     }
+  }
+  else if(chainName === "eth") {
+    if (provider.networkVersion !== parseInt(process.env.REACT_APP_CHAIN_ID_ETH)) {
+      try {
+        await provider.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: ethers.utils.hexValue(parseInt(process.env.REACT_APP_CHAIN_ID_ETH)) }],
+        });
+      } catch (err) {
+        if (err.code === 4902) {
+          await provider.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainName: process.env.REACT_APP_CHAIN_NAME_ETH,
+                chainId: ethers.utils.hexValue(parseInt(process.env.REACT_APP_CHAIN_ID_ETH)),
+                nativeCurrency: { name: "ETH", decimals: 18, symbol: "ETH" },
+                rpcUrls: [process.env.REACT_APP_RPC_URL_ETH],
+              },
+            ],
+          });
+        }
+      }
+    }
+  }
   };
 
   export const ConnectWalletHandler = async () => {
@@ -55,3 +81,18 @@ export const checkCorrectNetwork = async () => {
   export const chainChangedHandler = () => {
     window.location.reload();
   };
+
+  export const checkAndGetAddress = async (chainName) => {
+    await checkCorrectNetwork(chainName);
+    var returnValue = await ConnectWalletHandler();
+    if(returnValue[0])
+    return returnValue[0];
+    else 
+    return null;
+  }
+
+  export const isWalletCorrect = async (walletAddress, chainName) => {
+    var address = await checkAndGetAddress(chainName);
+    return walletAddress === address;
+
+  }
