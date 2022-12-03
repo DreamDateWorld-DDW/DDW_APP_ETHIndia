@@ -30,16 +30,12 @@
   }
   .profile{
     border-radius: 100%;
-    /* background-image: url(https://images.unsplash.com/photo-1542596768-5d1d21f1cf98?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80); */
     background-size: 100%;
     background-position: center;
     transition: all 0.2s ease-in-out;
     position: relative;
-    margin-bottom: 1.2em;
     border-radius:360px;
-      width: 10vw;
-    height: 10vh;
-      margin-left: 7.2em;
+    height: 20vh;
   }
   .gone{
       visibility: hidden;
@@ -63,10 +59,10 @@
       color: black;
       cursor: pointer;
   }
-  .profile:hover{
+  /* .profile:hover{
     background-size: 110%;
     box-shadow: 10px 10px 0  #8d08d0 , -10px -10px 0  #ff006f;
-  }
+  } */
   .profile_infos{
     text-align: center;
   }

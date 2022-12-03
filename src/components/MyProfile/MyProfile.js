@@ -152,7 +152,7 @@ const MyProfile = ({location}) => {
         <div className="profile_container">
           <div className="back"></div>
           <div className="profile">
-            <img src={location.state.imageSrc} height={150} width={150} style={{borderRadius: "100%"}}/>
+            <img id='profile-pic' className="profile-pic" src={location.state.imageSrc} height={150} width={150} style={{borderRadius: "100%"}}/>
           </div>
           <div className="profile_infos">
           <h1 className="name">{location.state.userDetails.name}</h1>
