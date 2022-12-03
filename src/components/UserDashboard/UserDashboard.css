@@ -1,0 +1,29 @@
+.wrapContent {
+	position: relative;
+	width: 70em;
+	margin: 7% auto;
+	background-color: #40404683;
+	animation: Slide_up 3s ease;
+	border-radius: 1.2em;
+}
+.wrapContent:hover {
+	background-color: #303035c0;
+}
+#borderContainer{
+	display: flex;
+	flex-direction: row;
+}
+#imageTagContainer{
+	display: flex;
+	flex-direction: column;    
+}
+#profile-pic{
+	border-radius:360px;
+	width: 10vw;
+	margin-left: 9.2em;
+	transition: ease 1.5s;
+}
+#profile-pic:hover {
+	transform: scale(1.2);
+	transition: ease 1.5s;  
+}
