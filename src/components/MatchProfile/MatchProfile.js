@@ -6,6 +6,9 @@ import { HuddleIframe, IframeConfig } from "@huddle01/huddle01-iframe";
 import { Chat } from "@pushprotocol/uiweb";
 import { createDDWAppWriteContractMatic, createDDWTokenWriteContractMatic } from '../../Helper/polygon/writeContract';
 import { createDDWAppWriteContractEth, createDDWTokenWriteContractEth } from '../../Helper/ethereum/writeContract';
+import { isWalletCorrect } from '../../Helper/contract'
+import { app_read_contract_eth } from '../../Helper/ethereum/readContract';
+import { app_read_contract_matic } from '../../Helper/polygon/readContract';
 
 const MatchProfile = () => {
 
@@ -61,7 +64,7 @@ const MatchProfile = () => {
           }
           var DDWContract = createDDWTokenWriteContractEth();
           try {
-              let COINS_PER_MIN = await app_read_contract.COINS_PER_MINUTE_OF_PRIVATE_SPACE();
+              let COINS_PER_MIN = await app_read_contract_eth.COINS_PER_MINUTE_OF_PRIVATE_SPACE();
               let nftTx = await DDWContract.increaseAllowance(process.env.REACT_APP_DDWAPP_CONTRACT_ADDRESS, COINS_PER_MIN.mul(parseInt(VCTime)));
               console.log("Mining....", nftTx.hash);
               } catch (error) {
@@ -85,7 +88,7 @@ const MatchProfile = () => {
           }
           var DDWContract = createDDWTokenWriteContractMatic();
           try {
-              let COINS_PER_MIN = await app_read_contract.COINS_PER_MINUTE_OF_PRIVATE_SPACE();
+              let COINS_PER_MIN = await app_read_contract_matic.COINS_PER_MINUTE_OF_PRIVATE_SPACE();
               let nftTx = await DDWContract.increaseAllowance(process.env.REACT_APP_DDWAPP_CONTRACT_ADDRESS, COINS_PER_MIN.mul(parseInt(VCTime)));
               console.log("Mining....", nftTx.hash);
               } catch (error) {

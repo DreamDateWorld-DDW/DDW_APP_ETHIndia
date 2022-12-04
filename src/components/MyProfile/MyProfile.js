@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { createDDWAppWriteContractMatic, createDDWTokenWriteContractMatic } from '../../Helper/polygon/writeContract';
-import { createDDWAppWriteContractEth } from '../../Helper/ethereum/writeContract';
+import { createDDWAppWriteContractEth, createDDWTokenWriteContractEth } from '../../Helper/ethereum/writeContract';
 import { read_from_ipfs } from '../../Helper/web3storage';
 import "./MyProfile.css"
 import { app_token_read_contract_eth, ddw_token_read_contract_eth } from '../../Helper/ethereum/readContract';
@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { app_read_contract_eth } from '../../Helper/ethereum/readContract';
 import { app_read_contract_matic } from '../../Helper/polygon/readContract';
+import { isWalletCorrect } from '../../Helper/contract'
 // import ENS, { getEnsAddress } from '@ensdomains/ensjs'
 
 const MyProfile = ({location}) => {
@@ -34,7 +35,7 @@ const MyProfile = ({location}) => {
         if(!Number.isInteger(parseInt(APPamount))){
             alert("Enter correct number in the field");
             return}
-        if(props.blockchain === "eth") {
+        if(blockchain === "eth") {
           var isItRightWallet = await isWalletCorrect(wallet, "eth");
           if(!isItRightWallet) {
               alert(`Wrong Wallet. You should switch to ${wallet}`);
@@ -49,7 +50,7 @@ const MyProfile = ({location}) => {
               return;
               }
         }
-        else if(props.blockchain === "matic") {
+        else if(blockchain === "matic") {
             var isItRightWallet = await isWalletCorrect(wallet, "matic");
             if(!isItRightWallet) {
                 alert(`Wrong Wallet. You should switch to ${wallet}`);
@@ -86,7 +87,7 @@ const MyProfile = ({location}) => {
       if(!Number.isInteger(parseInt(DDWSendToken))){
           alert("Enter correct number in the field");
           return}
-      if(props.blockchain === "aptos") {
+      if(blockchain === "eth") {
         var isItRightWallet = await isWalletCorrect(wallet, "eth");
         if(!isItRightWallet) {
             alert(`Wrong Wallet. You should switch to ${wallet}`);
@@ -94,14 +95,14 @@ const MyProfile = ({location}) => {
         }
         var Contract = createDDWTokenWriteContractEth();
         try {
-            let nftTx = await Contract.transfer(receiver, ethers.utils.parseEther(DDWSendToken));
+            let nftTx = await Contract.transfer(receiverDDW, ethers.utils.parseEther(DDWSendToken));
             console.log("Mining....", nftTx.hash);
             } catch (error) {
             console.log("Error DDW token transfer", error);
             return;
             }
       }
-      else if(props.blockchain === "matic") {
+      else if(blockchain === "matic") {
           var isItRightWallet = await isWalletCorrect(wallet, "matic");
           if(!isItRightWallet) {
               alert(`Wrong Wallet. You should switch to ${wallet}`);
