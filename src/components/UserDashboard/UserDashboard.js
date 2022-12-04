@@ -16,8 +16,8 @@ const UserDasBoard = () => {
   }, []);
 
   const location = useLocation();
-  var wallet = "location.state.userDetails.wallet";
-  var blockchain = "location.state.userDetails.blockchain";
+  var wallet = location.state.userDetails.wallet;
+  var blockchain = location.state.userDetails.blockchain;
   const [matches, setMatches] = useState([]);
 
   const loadMatchesData = async (wallet) => {
@@ -34,7 +34,7 @@ const UserDasBoard = () => {
       matchTimestampOnChain = likes_info[1];
       console.log("matchTime", matchTimestampOnChain);
     }
-    else if(blockchain==="metamask")
+    else if(blockchain==="matic")
     {
         var Contract = createDDWAppWriteContractMatic();
         var likes_info = await Contract.get_matches();
@@ -52,7 +52,7 @@ const UserDasBoard = () => {
               if(!(await app_read_contract_eth.is_account_registered(matchListOnChain[index]))) continue;
               user_ipfs_cid = await app_read_contract_eth.get_user_details(matchListOnChain[index]);
             }
-            else if(blockchain === "metamask") {
+            else if(blockchain === "matic") {
                 if(!(await app_read_contract_matic.is_account_registered(matchListOnChain[index]))) continue;
                 user_ipfs_cid = await app_read_contract_matic.get_user_details(matchListOnChain[index]);
             }
@@ -118,7 +118,7 @@ const UserDasBoard = () => {
       <MyProfile location={location}/>
       <div id='imageTagContainer'>
         <h1>Matches</h1>
-      <MatchList matches={matches} userDetails={"location.state.userDetails"} imageSrc={"location.state.imageSrc"} />
+      <MatchList matches={matches} userDetails={location.state.userDetails} imageSrc={location.state.imageSrc} />
       </div>
       </div>
     </div>

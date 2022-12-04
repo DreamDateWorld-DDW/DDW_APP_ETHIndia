@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { createDDWAppWriteContractMatic } from '../../Helper/polygon/writeContract';
+import { createDDWAppWriteContractMatic, createDDWTokenWriteContractMatic } from '../../Helper/polygon/writeContract';
 import { createDDWAppWriteContractEth } from '../../Helper/ethereum/writeContract';
 import { read_from_ipfs } from '../../Helper/web3storage';
 import "./MyProfile.css"
@@ -22,9 +22,106 @@ const MyProfile = ({location}) => {
     const [DDWToken, setDDWToken] = useState(0);
     const [APPToken, setAPPToken] = useState(0);
     const [searchValue, setsearchValue] = useState();
+    const [DDWSendToken, setDDWSendToken] = useState();
+    const [receiverDDW, setReceiverDDW] = useState();
+    const [APPamount, setAPPAmount] = useState();
+
+    const handleAPPTokenAmountChange = (e) => {
+        setAPPAmount(e.target.value);
+    }
+    const onTokenClaimTransactionSubmit = async (e) => {
+        e.preventDefault();
+        if(!Number.isInteger(parseInt(APPamount))){
+            alert("Enter correct number in the field");
+            return}
+        if(props.blockchain === "eth") {
+          var isItRightWallet = await isWalletCorrect(wallet, "eth");
+          if(!isItRightWallet) {
+              alert(`Wrong Wallet. You should switch to ${wallet}`);
+              return;
+          }
+          var Contract = createDDWAppWriteContractEth();
+          try {
+              let nftTx = await Contract.exchange_approval_and_claim_coin(ethers.utils.parseEther(APPamount));
+              console.log("Mining....", nftTx.hash);
+              } catch (error) {
+              console.log("Error APP token xchange", error);
+              return;
+              }
+        }
+        else if(props.blockchain === "matic") {
+            var isItRightWallet = await isWalletCorrect(wallet, "matic");
+            if(!isItRightWallet) {
+                alert(`Wrong Wallet. You should switch to ${wallet}`);
+                return;
+            }
+            var Contract = createDDWAppWriteContractMatic();
+            try {
+                let nftTx = await Contract.exchange_approval_and_claim_coin(ethers.utils.parseEther(APPamount));
+                console.log("Mining....", nftTx.hash);
+                } catch (error) {
+                console.log("Error APP token xchange", error);
+                return;
+                }
+        }
+        document.getElementById("inputVal").value = "";
+        setAPPAmount("");
+        alert("Tokens Claimed");
+
+    }
+
+    const handleDDWTokenAmountChange = async (e) => {
+        setDDWSendToken(e.target.value);
+    }
+
+    const handleRecDDWTokenAddressChange = async (e) => {
+        setReceiverDDW(e.target.value);
+    }
     const handlesearchchange = async(e) =>{
         setsearchValue(e.target.value);
     }
+
+    const onDDWTokenTransactionSubmit = async (e) => {
+      e.preventDefault();
+      if(!Number.isInteger(parseInt(DDWSendToken))){
+          alert("Enter correct number in the field");
+          return}
+      if(props.blockchain === "aptos") {
+        var isItRightWallet = await isWalletCorrect(wallet, "eth");
+        if(!isItRightWallet) {
+            alert(`Wrong Wallet. You should switch to ${wallet}`);
+            return;
+        }
+        var Contract = createDDWTokenWriteContractEth();
+        try {
+            let nftTx = await Contract.transfer(receiver, ethers.utils.parseEther(DDWSendToken));
+            console.log("Mining....", nftTx.hash);
+            } catch (error) {
+            console.log("Error DDW token transfer", error);
+            return;
+            }
+      }
+      else if(props.blockchain === "matic") {
+          var isItRightWallet = await isWalletCorrect(wallet, "matic");
+          if(!isItRightWallet) {
+              alert(`Wrong Wallet. You should switch to ${wallet}`);
+              return;
+          }
+          var Contract = createDDWTokenWriteContractMatic();
+          try {
+              let nftTx = await Contract.transfer(receiver, ethers.utils.parseEther(DDWSendToken));
+              console.log("Mining....", nftTx.hash);
+              } catch (error) {
+              console.log("Error DDW token transfer", error);
+              return;
+              }
+      }
+      document.getElementById("enteredAmt").value = "";
+      document.getElementById("recipientAddress").value = "";
+      setDDWSendToken("")
+      setReceiverDDW("");
+      alert("Tokens Sent");
+  }
 
     const ensResolver = async (address) => {
           try {
@@ -163,23 +260,22 @@ const MyProfile = ({location}) => {
           <span>Claim DDW Tokens</span>
           <div className='inputContainer'>
           <div className="input-group input">
-          <input  type="text" placeholder="Enter Approval Token Amount" />
+          <input  type="text" id="inputVal" placeholder="Enter Approval Token Amount" onChange={handleAPPTokenAmountChange}/>
           </div>
-          <button className="slide buttonContainer">&nbsp;</button>
+          <button className="slide buttonContainer" onClick={onTokenClaimTransactionSubmit}>&nbsp;</button>
           </div>
           <span>Send DDW Tokens</span>
           <div id='inputContainer'>
           <div className='inputContainer'>
           <div className="input-group input">
-          <input  type="text" placeholder="Enter DDW Token Amount" />
+          <input  type="text" id="enteredAmt" placeholder="Enter DDW Token Amount" onChange={handleDDWTokenAmountChange}/>
           </div>
-          <button className="slide buttonContainer">&nbsp;</button>
           </div>
           <div className='inputContainer'>
           <div className="input-group input">
-          <input  type="text" placeholder="Enter Recipient address" />
+          <input  type="text" id="recipientAddress" placeholder="Enter Recipient address" onChange={handleRecDDWTokenAddressChange} />
           </div>
-          <button className="slide buttonContainer">&nbsp;</button>
+          <button className="slide buttonContainer" onClick={onDDWTokenTransactionSubmit}>&nbsp;</button>
           </div>
           </div>
         </div>
