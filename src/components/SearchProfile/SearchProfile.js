@@ -2,12 +2,14 @@ import React, {useState} from 'react'
 import OriginButton from '../../Helper/originButton/OriginButton'
 import { useLocation, useNavigate } from 'react-router-dom'
 import "./SearchProfile.css"
+import { createDDWAppWriteContractMatic } from '../../Helper/polygon/writeContract'
+import { createDDWAppWriteContractEth } from '../../Helper/ethereum/writeContract'
 
 const SearchProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [searchDetails, setSearchDetails] = useState("location.state.searchData");
-    const [userDetails, setuserDetails] = useState("location.state.userDetails");
+    const [searchDetails, setSearchDetails] = useState(location.state.searchData);
+    const [userDetails, setuserDetails] = useState(location.state.userDetails);
     const [classNameValue, setClassNameValue] = useState("")
     const [textChange, setTextChange] = useState(false)
     const handleClassNameValueLike = () =>{
@@ -18,13 +20,38 @@ const SearchProfile = () => {
     }
 
     const onLike = async() => {
-        var isItRightWallet = true;
-        if(!isItRightWallet) {
-            alert(`Wrong Wallet. You should switch to ${userDetails.wallet}`);
-            return;
+        if(userDetails.blockchain === "eth") {
+            var isItRightWallet = await isWalletCorrect(userDetails.wallet, "eth");
+            if(!isItRightWallet) {
+                alert(`Wrong Wallet. You should switch to ${userDetails.wallet}`);
+                return;
+            }
+            var Contract = createDDWAppWriteContractEth();
+            try {
+                let nftTx = await Contract.like_on_chain(searchDetails.wallet);
+                console.log("Mining....", nftTx.hash);
+                } catch (error) {
+                console.log("Error like on chain", error);
+                return;
+                }
+        }
+        else if(userDetails.blockchain === "matic") {
+            var isItRightWallet = await isWalletCorrect(userDetails.wallet, "matic");
+            if(!isItRightWallet) {
+                alert(`Wrong Wallet. You should switch to ${userDetails.wallet}`);
+                return;
+            }
+            var Contract = createDDWAppWriteContractMatic();
+            try {
+                let nftTx = await Contract.like_on_chain(searchDetails.wallet);
+                console.log("Mining....", nftTx.hash);
+                } catch (error) {
+                console.log("Error like on chain", error);
+                return;
+                }
         }
         alert("Liked, now see if they like you back ;)");
-        navigate('/Userdashboard', {state: {userDetails: userDetails, imageSrc: "location.state.imageSrc"}});
+        navigate('/Userdashboard', {state: {userDetails: userDetails, imageSrc: location.state.imageSrc}});
 
     }
 
@@ -53,7 +80,7 @@ const SearchProfile = () => {
     <>    
     <div style={{marginTop: "6em", display : "flex", justifyContent : "center", alignItems : "center"}} id='containingsearchprofile'>
               <img style={{marginRight: "9em"}} id='profile-pic' className="profile-pic hoverStyle"
-      src="https://cdn.discordapp.com/attachments/963207924656795680/1027005573499199609/3982230923_Gigachad.png"
+      src={location.state.imageSrc}
       alt='profile-image' />
       <h1>
            <span>{`Bio : ${searchDetails.bio}`} </span>
@@ -65,9 +92,9 @@ const SearchProfile = () => {
            <span>{`Interest : ${searchDetails.interest}`}</span>
       </h1>
       <div className='containerbuttonvalue'>
-    <OriginButton buttonText = "Like"/>
-    <OriginButton buttonText = "back"/>
-    <OriginButton buttonText = "Super Like"/>
+    <OriginButton buttonText = "Like" onClick={onLike}/>
+    <OriginButton buttonText = "back" onClick={(e) => navigate('/Userdashboard', {state: {userDetails: userDetails, imageSrc: location.state.imageSrc}})}/>
+    <OriginButton buttonText = "Super Like" onClick={onSuperLike}/>
     </div>
     <OriginButton buttonText = {!textChange ? "Show Dashboard" : "Close"} onClick = {() => getPortfolio()}/>
     </div>
