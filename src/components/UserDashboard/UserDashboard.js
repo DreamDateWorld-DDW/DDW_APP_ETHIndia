@@ -16,8 +16,8 @@ const UserDasBoard = () => {
   }, []);
 
   const location = useLocation();
-  var wallet = location.state.userDetails.wallet;
-  var blockchain = location.state.userDetails.blockchain;
+  var wallet = "location.state.userDetails.wallet";
+  var blockchain = "location.state.userDetails.blockchain";
   const [matches, setMatches] = useState([]);
 
   const loadMatchesData = async (wallet) => {
@@ -118,7 +118,7 @@ const UserDasBoard = () => {
       <MyProfile location={location}/>
       <div id='imageTagContainer'>
         <h1>Matches</h1>
-      <MatchList matches={matches} userDetails={location.state.userDetails} imageSrc={location.state.imageSrc} />
+      <MatchList matches={matches} userDetails={"location.state.userDetails"} imageSrc={"location.state.imageSrc"} />
       </div>
       </div>
     </div>

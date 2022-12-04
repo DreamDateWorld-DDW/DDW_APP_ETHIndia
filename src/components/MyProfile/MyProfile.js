@@ -7,13 +7,101 @@ import { app_token_read_contract_eth, ddw_token_read_contract_eth } from '../../
 import { app_token_read_contract_matic, ddw_token_read_contract_matic } from '../../Helper/polygon/readContract';
 import { shorten_address } from '../../Helper/utilities';
 import { ethers } from 'ethers';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { app_read_contract_eth } from '../../Helper/ethereum/readContract';
+import { app_read_contract_matic } from '../../Helper/polygon/readContract';
+// import ENS, { getEnsAddress } from '@ensdomains/ensjs'
+
 const MyProfile = ({location}) => {
     const [visibilityDDW, setVisibilityDDW] = useState(false);
+    const navigate = useNavigate();
     const [visibilitySBT, setVisibilitySBT] = useState(false);
     var wallet = location.state.userDetails.wallet;
     var blockchain = location.state.userDetails.blockchain;
     const [DDWToken, setDDWToken] = useState(0);
     const [APPToken, setAPPToken] = useState(0);
+    const [searchValue, setsearchValue] = useState();
+    const handlesearchchange = async(e) =>{
+        setsearchValue(e.target.value);
+    }
+
+    const ensResolver = async (address) => {
+          try {
+              const { ethereum } = window;
+              if (ethereum) {
+                const provider = new ethers.providers.AlchemyProvider("homestead", "4wlQK3465FOi2-e6cVdJ9Keieb3ztXli")
+                                  const resAddress = await provider.resolveName(address);
+                  return resAddress
+              }
+          } catch (error) {
+              console.log(error);
+              return null
+          }
+    }
+
+    const sendSearchValue =async(e) => {
+      e.preventDefault();
+      var address = await ensResolver(searchValue)
+      console.log(searchValue)
+      console.log(address)
+      if(!address){
+        var mongo_res = await axios.get(process.env.REACT_APP_MONGODB_API_ENDPOINT + `discordName/${searchValue}`);
+        if(!mongo_res.data){
+          alert("This Discord Account is not Registered")
+          document.getElementById("searchDiscord").value = "";
+          setsearchValue("")
+          return;
+        }
+        address = mongo_res.data.walletAddress;
+      }
+      var search_ipfsCid = "";
+      if(mongo_res.data.blockchain === "eth")
+      {  
+        if(!(await app_read_contract_eth.is_account_registered(address))) return;
+        search_ipfsCid = await app_read_contract_eth.get_user_details(address);
+      }
+      else if(mongo_res.data.blockchain === "matic")
+      {
+        if(!(await app_read_contract_matic.is_account_registered(address))) return;
+        search_ipfsCid = await app_read_contract_matic.get_user_details(address);
+      }
+      if(search_ipfsCid === "") return;
+      var files = await read_from_ipfs(search_ipfsCid, "userInfo.json");
+      if(files[0]) {
+        files = files[1];
+      console.log(files);
+      var searchDetails = {};
+      let reader = new FileReader();
+      reader.readAsText(files[0]);
+      reader.onload = function() {
+      searchDetails = JSON.parse(reader.result);
+      console.log(searchDetails);
+      read_from_ipfs(searchDetails.image, "avatar.png").then((search_image_files) => {
+          var search_image_src = null;
+          if(search_image_files[0])
+          search_image_src = window.URL.createObjectURL(search_image_files[1][0]);
+          else
+          search_image_src = search_image_files[1];
+          searchDetails.src = search_image_src;
+          navigate('/Searchprofile', {state: {searchData: searchDetails, userDetails: location.state.userDetails, imageSrc: location.state.imageSrc}})
+        })
+      }
+      }
+      else {
+        var searchDetails = files[1];
+        console.log(searchDetails);
+        read_from_ipfs(searchDetails.image, "avatar.png").then((search_image_files) => {
+          var search_image_src = null;
+          if(search_image_files[0])
+          search_image_src = window.URL.createObjectURL(search_image_files[1][0]);
+          else
+          search_image_src = search_image_files[1];
+          searchDetails.src = search_image_src;
+          navigate('/Searchprofile', {state: {searchData: searchDetails, userDetails: location.state.userDetails, imageSrc: location.state.imageSrc}})
+        })
+      }
+    }
 
     const getDDWBalance = async ()=> {
       if(blockchain === "eth")
@@ -68,9 +156,9 @@ const MyProfile = ({location}) => {
           <span>Enter Username</span>
           <div className='inputContainer'>
           <div className="input-group input">
-          <input  type="text" placeholder="Username" />
+          <input  type="text" placeholder="Username" onChange={handlesearchchange}/>
           </div>
-          <button className="slide buttonContainer">&nbsp;</button>
+          <button className="slide buttonContainer" onClick={sendSearchValue}>&nbsp;</button>
           </div>
           <span>Claim DDW Tokens</span>
           <div className='inputContainer'>
