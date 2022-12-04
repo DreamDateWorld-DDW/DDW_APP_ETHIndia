@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import "./SearchProfile.css"
 import { createDDWAppWriteContractMatic } from '../../Helper/polygon/writeContract'
 import { createDDWAppWriteContractEth } from '../../Helper/ethereum/writeContract'
+import { isWalletCorrect } from '../../Helper/contract'
 
 const SearchProfile = () => {
     const navigate = useNavigate();
