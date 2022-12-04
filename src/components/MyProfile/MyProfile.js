@@ -109,7 +109,7 @@ const MyProfile = ({location}) => {
           }
           var Contract = createDDWTokenWriteContractMatic();
           try {
-              let nftTx = await Contract.transfer(receiver, ethers.utils.parseEther(DDWSendToken));
+              let nftTx = await Contract.transfer(receiverDDW, ethers.utils.parseEther(DDWSendToken));
               console.log("Mining....", nftTx.hash);
               } catch (error) {
               console.log("Error DDW token transfer", error);

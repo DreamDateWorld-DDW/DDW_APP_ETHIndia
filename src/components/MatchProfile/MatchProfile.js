@@ -1,9 +1,11 @@
 import {React, useState} from 'react'
-// import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import "./MatchProfile.css"
 import OriginButton from '../../Helper/originButton/OriginButton'
 import { HuddleIframe, IframeConfig } from "@huddle01/huddle01-iframe";
 import { Chat } from "@pushprotocol/uiweb";
+import { createDDWAppWriteContractMatic, createDDWTokenWriteContractMatic } from '../../Helper/polygon/writeContract';
+import { createDDWAppWriteContractEth, createDDWTokenWriteContractEth } from '../../Helper/ethereum/writeContract';
 
 const MatchProfile = () => {
 
@@ -13,9 +15,11 @@ const MatchProfile = () => {
     width: "100%",
     noBorder: true
   };
+    const navigate = useNavigate();
+    const location = useLocation();
     const [isChatAndVcVisible, setisChatAndVcVisible] = useState(false);
-    const [matchDetails, setMatchDetails] = useState("location.state.matchData");
-    const [userDetails, setuserDetails] = useState("location.state.userDetails");
+    const [matchDetails, setMatchDetails] = useState(location.state.matchData);
+    const [userDetails, setuserDetails] = useState(location.state.userDetails);
     const [VCTime, setVCTime] = useState(0);
     const [isHovering, setIsHovering] = useState(false);
 
@@ -49,11 +53,54 @@ const MatchProfile = () => {
         if(!Number.isInteger(parseInt(VCTime))){
         alert("Enter correct number in the field");
         return}
-        var isItRightWallet = true
-        if(!isItRightWallet) {
-            alert(`Wrong Wallet. You should switch to ${userDetails.wallet}`);
-            return;
-        }
+        if(userDetails.blockchain === "eth") {
+          var isItRightWallet = await isWalletCorrect(userDetails.wallet, "eth");
+          if(!isItRightWallet) {
+              alert(`Wrong Wallet. You should switch to ${userDetails.wallet}`);
+              return;
+          }
+          var DDWContract = createDDWTokenWriteContractEth();
+          try {
+              let COINS_PER_MIN = await app_read_contract.COINS_PER_MINUTE_OF_PRIVATE_SPACE();
+              let nftTx = await DDWContract.increaseAllowance(process.env.REACT_APP_DDWAPP_CONTRACT_ADDRESS, COINS_PER_MIN.mul(parseInt(VCTime)));
+              console.log("Mining....", nftTx.hash);
+              } catch (error) {
+              console.log("Error increase allowance", error);
+              return;
+              }
+          var Contract = createDDWAppWriteContractEth();
+          try {
+              let nftTx = await Contract.create_private_space_on_chain(matchDetails.wallet, parseInt(VCTime));
+              console.log("Mining....", nftTx.hash);
+              } catch (error) {
+              console.log("Error create private space", error);
+              return;
+              }
+      }
+      else if(userDetails.blockchain === "matic") {
+          var isItRightWallet = await isWalletCorrect(userDetails.wallet, "matic");
+          if(!isItRightWallet) {
+              alert(`Wrong Wallet. You should switch to ${userDetails.wallet}`);
+              return;
+          }
+          var DDWContract = createDDWTokenWriteContractMatic();
+          try {
+              let COINS_PER_MIN = await app_read_contract.COINS_PER_MINUTE_OF_PRIVATE_SPACE();
+              let nftTx = await DDWContract.increaseAllowance(process.env.REACT_APP_DDWAPP_CONTRACT_ADDRESS, COINS_PER_MIN.mul(parseInt(VCTime)));
+              console.log("Mining....", nftTx.hash);
+              } catch (error) {
+              console.log("Error increase allowance", error);
+              return;
+              }
+          var Contract = createDDWAppWriteContractMatic();
+          try {
+              let nftTx = await Contract.create_private_space_on_chain(matchDetails.wallet, parseInt(VCTime));
+              console.log("Mining....", nftTx.hash);
+              } catch (error) {
+              console.log("Error create private space", error);
+              return;
+              }
+      }
           // document.getElementById("VCTime").value = "";
           setVCTime("")
           alert("Private VC Created, check the Discord Server ;)");
@@ -77,7 +124,7 @@ const MatchProfile = () => {
         </div>
       )}
     <h2 className='gapClassName' >Interests</h2>
-    <p className='gapClassName' >matchDetails.interest</p>
+    <p className='gapClassName' >{matchDetails.interest.join(', ')}</p>
     <h2 className='gapClassName' >Bio</h2>
     <p className='gapClassName' >{matchDetails.bio}</p>
     <h2 className='gapClassName' >Gender</h2>
@@ -91,7 +138,7 @@ const MatchProfile = () => {
         </div>
         <div className="section">
     <OriginButton buttonText = "Start VC" onClick={startVC} />
-    <OriginButton buttonText = "Back" />
+    <OriginButton buttonText = "Back" onClick={(e) => navigate('/Userdashboard', {state: {userDetails: userDetails, imageSrc: location.state.imageSrc}})}/>
   </div>
 
         </div>)}
